@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="subwave_bg">#F3EFE6</color>
+    <color name="subwave_ink">#161412</color>
+    <color name="subwave_accent">#D94B2A</color>
+</resources>

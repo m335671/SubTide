@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Concentric tuning-dial rings in the SubWave accent (#d94b2a) — replaces the default template
+     robot. Each ring is one compound path (outer loop + inner loop, fillType="evenOdd") so the
+     gaps are genuinely transparent and composite correctly over the background layer. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#d94b2a"
+        android:fillType="evenOdd"
+        android:pathData="M87,54 A33,33 0 1,1 21,54 A33,33 0 1,1 87,54 Z M80,54 A26,26 0 1,1 28,54 A26,26 0 1,1 80,54 Z" />
+    <path
+        android:fillColor="#d94b2a"
+        android:fillType="evenOdd"
+        android:pathData="M73,54 A19,19 0 1,1 35,54 A19,19 0 1,1 73,54 Z M68,54 A14,14 0 1,1 40,54 A14,14 0 1,1 68,54 Z" />
+    <path
+        android:fillColor="#d94b2a"
+        android:pathData="M60,54 A6,6 0 1,1 48,54 A6,6 0 1,1 60,54 Z" />
+</vector>

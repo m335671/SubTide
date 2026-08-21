@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme — Compose draws the real UI; this only covers the
+         pre-draw window background/status bar so there is no color flash on launch. -->
+    <style name="Theme.SubTide" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/subwave_accent</item>
+        <item name="android:windowBackground">#100E0C</item>
+        <item name="android:statusBarColor">#100E0C</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

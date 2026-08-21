@@ -1,0 +1,25 @@
+*.iml
+.gradle
+/.claude
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Release signing — never commit the keystore or its secrets.
+*.jks
+*.keystore
+key.properties
+
+# Ad-hoc APK exports dropped in the project root while signing manually.
+/*.apk
+/*.apk.idsig
+local.properties
