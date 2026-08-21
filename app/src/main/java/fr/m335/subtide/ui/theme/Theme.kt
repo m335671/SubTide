@@ -17,7 +17,7 @@ private val LocalSubwaveDerivedColors = staticCompositionLocalOf {
  * Composes the app on top of a [SubwaveThemeOption] rather than a fixed palette, so a theme fetched
  * from `GET /themes` can replace [themeOption] later without any call site changing. Material 3 is
  * used only as the technical component skeleton (ripple, text selection, focus) — its color scheme,
- * shapes and defaults are entirely overridden by the SubWave tokens below.
+ * shapes and defaults are entirely overridden by the SUB/WAVE tokens below.
  */
 @Composable
 fun SubTideTheme(

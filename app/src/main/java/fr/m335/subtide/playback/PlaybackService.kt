@@ -236,7 +236,7 @@ class PlaybackService : MediaLibraryService() {
             .setMediaMetadata(
                 MediaMetadata.Builder()
                     .setTitle("Radio not configured")
-                    .setArtist("Open SubTide on your phone to set it up")
+                    .setArtist("Open SUB/TIDE on your phone to set it up")
                     .setIsBrowsable(false)
                     .setIsPlayable(false)
                     .build(),
@@ -382,7 +382,7 @@ class PlaybackService : MediaLibraryService() {
             browser: MediaSession.ControllerInfo,
             params: LibraryParams?,
         ): ListenableFuture<LibraryResult<MediaItem>> =
-            Futures.immediateFuture(LibraryResult.ofItem(folderItem(ROOT_ID, "SubWave"), params))
+            Futures.immediateFuture(LibraryResult.ofItem(folderItem(ROOT_ID, "SUB/WAVE"), params))
 
         override fun onGetItem(
             session: MediaLibrarySession,
@@ -390,7 +390,7 @@ class PlaybackService : MediaLibraryService() {
             mediaId: String,
         ): ListenableFuture<LibraryResult<MediaItem>> {
             val item = when (mediaId) {
-                ROOT_ID -> folderItem(ROOT_ID, "SubWave")
+                ROOT_ID -> folderItem(ROOT_ID, "SUB/WAVE")
                 LIVE_FOLDER_ID -> folderItem(LIVE_FOLDER_ID, "Live")
                 LIVE_ID -> liveItem()
                 HISTORY_ID -> folderItem(HISTORY_ID, "History")

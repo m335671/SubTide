@@ -72,6 +72,6 @@ jobs:
         with:
           tag_name: latest
           target_commitish: ${{ github.sha }}
-          name: "SubTide v${{ steps.bump.outputs.version_name }}"
+          name: "SUB/TIDE v${{ steps.bump.outputs.version_name }}"
           make_latest: true
           files: subtide-${{ steps.bump.outputs.version_name }}.apk

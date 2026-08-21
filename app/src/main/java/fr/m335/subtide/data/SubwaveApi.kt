@@ -9,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 /**
- * Verified against a real SubWave deployment on 2026-08-19 — these are the actual field
+ * Verified against a real SUB/WAVE deployment on 2026-08-19 — these are the actual field
  * names, not guesses. `/now-playing` wraps the track under `nowPlaying`, the on-air DJ is a nested
  * `dj` object (not a flat `djOnAir` string), listener count is `{current, peak}`, and the key field
  * is `musicalKey`, not `key`. Every field stays nullable and unknown keys are ignored, so a future

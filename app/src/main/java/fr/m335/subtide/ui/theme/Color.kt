@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 
 /**
- * The 7 themable tokens SubWave's `/themes` endpoint serves. Every screen must be built on
+ * The 7 themable tokens SUB/WAVE's `/themes` endpoint serves. Every screen must be built on
  * top of these, never on hardcoded colors, so a server-provided theme can replace them wholesale.
  */
 data class SubwaveColors(

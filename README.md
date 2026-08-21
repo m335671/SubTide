@@ -1,6 +1,6 @@
-# SubTide
+# SUB/TIDE
 
-A native Android client for [SubWave](https://github.com/perminder-klair/subwave), a
+A native Android client for [SUB/WAVE](https://github.com/perminder-klair/subwave), a
 self-hosted internet radio server.
 
 [![Release signed APK](https://github.com/m335671/SubTide/actions/workflows/release-apk.yml/badge.svg)](https://github.com/m335671/SubTide/actions/workflows/release-apk.yml)
@@ -12,12 +12,16 @@ self-hosted internet radio server.
 > than hand-written line by line. If that's not the kind of project you're comfortable
 > running or relying on, this app isn't for you — no hard feelings, just look elsewhere.
 
+<p align="center">
+  <img src="assets/Live_Player.png" alt="SUB/TIDE — Live player" width="360">
+</p>
+
 ## About
 
-The official SubWave client is React Native/Expo. SubTide is a ground-up Kotlin/Jetpack
-Compose rewrite of the same product, built to talk to any SubWave server's public HTTP API,
+The official SUB/WAVE client is React Native/Expo. SUB/TIDE is a ground-up Kotlin/Jetpack
+Compose rewrite of the same product, built to talk to any SUB/WAVE server's public HTTP API,
 with full native Android Auto support the official client doesn't have. No server is baked
-in — you point it at your own SubWave instance on first launch.
+in — you point it at your own SUB/WAVE instance on first launch.
 
 ## Download
 
@@ -35,11 +39,21 @@ A new build is published automatically every time `main` changes (see [`.github/
 | **Booth** | Live feed of DJ chatter/segments from the station. |
 | **Song requests** | Submit a free-text track request and follow its pending / resolved / rejected status. |
 | **Multi-theme** | Switch between server-provided palettes (e.g. classic light, midnight dark) without restarting the app. |
-| **Admin skip** | Authenticated DJs can skip the current track; credentials are stored via Jetpack Security's `EncryptedSharedPreferences`, never in plaintext. |
+| **Admin skip** | Once connected as admin inside the app, a dedicated Skip tab lets you skip the current track with one tap; credentials are stored via Jetpack Security's `EncryptedSharedPreferences`, never in plaintext. |
+
+## Screenshots
+
+| Timeline | Themes | Requests |
+|---|---|---|
+| <img src="assets/Timeline.png" width="260"> | <img src="assets/Themes_Selector.png" width="260"> | <img src="assets/Requests.png" width="260"> |
+
+| Admin skip | Android Auto |
+|---|---|
+| <img src="assets/Skip_Screen.png" width="260"> | <img src="assets/Android_Auto.png" width="380"> |
 
 ## Style
 
-SubTide reproduces SubWave's visual identity pixel-for-pixel rather than inventing its own
+SUB/TIDE reproduces SUB/WAVE's visual identity pixel-for-pixel rather than inventing its own
 look: a vintage radio fascia reinterpreted as brutalist newsprint — cream paper background,
 near-black ink, a single warm vermillion accent, serif display type for titles, monospace for
 anything numeric (BPM, duration, latency, LLM token counts), zero border radius anywhere, and

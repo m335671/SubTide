@@ -6,7 +6,7 @@ import androidx.security.crypto.MasterKey
 
 /**
  * Some private stations gate the actual audio stream behind a `?auth=` query token even though the
- * JSON API stays public — confirmed against a real SubWave deployment, whose `/state` reports
+ * JSON API stays public — confirmed against a real SUB/WAVE deployment, whose `/state` reports
  * `privacy.listenerAuth: true`. Distinct from the admin user/password (`AdminAuthProvider`, for the
  * admin `dj` endpoints): this key is only ever needed to fetch `stream.mount`. Stored encrypted
  * since it's a credential, per CLAUDE_CODE_PROMPT.md.

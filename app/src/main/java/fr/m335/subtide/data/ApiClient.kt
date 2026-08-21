@@ -12,7 +12,7 @@ import retrofit2.create
  * change to admin auth (see [AdminAuthProvider]) or the API path stays a single-file change, per
  * CLAUDE_CODE_PROMPT.md.
  *
- * Verified against a real SubWave deployment: the domain root serves the Next.js web frontend, and
+ * Verified against a real SUB/WAVE deployment: the domain root serves the Next.js web frontend, and
  * the controller's JSON/image endpoints only answer under an `/api/` prefix — the raw audio mount
  * (`stream.mount` from `/now-playing`) is the one exception, served at the plain root. The user
  * only ever types the plain domain; this prefixing is handled here so nothing else needs it.
