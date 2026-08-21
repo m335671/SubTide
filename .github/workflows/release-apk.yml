@@ -65,12 +65,12 @@ jobs:
       - name: Rename APK artifact
         run: cp app/build/outputs/apk/release/app-release.apk "subtide-${{ steps.bump.outputs.version_name }}.apk"
 
-      - name: Publish "latest" release
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: latest
+          tag_name: v${{ steps.bump.outputs.version_name }}
           target_commitish: ${{ github.sha }}
           name: "SUB/TIDE v${{ steps.bump.outputs.version_name }}"
           make_latest: true
