@@ -8,6 +8,7 @@ import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.CommandButton
 import androidx.media3.session.LibraryResult
@@ -104,6 +105,18 @@ class PlaybackService : MediaLibraryService() {
             .setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true)
             .setHandleAudioBecomingNoisy(true)
             .build()
+        // Player.play() is just setPlayWhenReady(true) — it does NOT prepare() an idle player.
+        // The stream is deliberately left un-prepared until playback is actually requested (see
+        // updatePlayer), so this is what turns any "play" request — the app's power button, the
+        // notification, lock screen, Android Auto, a Bluetooth headset — into a real prepare(),
+        // regardless of which surface it came from.
+        player.addListener(object : Player.Listener {
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                if (playWhenReady && player.playbackState == Player.STATE_IDLE) {
+                    player.prepare()
+                }
+            }
+        })
         mediaSession = MediaLibrarySession.Builder(this, player, BrowseTreeCallback())
             .setSessionActivity(sessionActivityPendingIntent())
             .build()
@@ -205,8 +218,12 @@ class PlaybackService : MediaLibraryService() {
         if (!streamUrlSet && mount != null) {
             val accessKey = ListenerAccess(applicationContext).accessKey
             val streamUrl = ApiClient.rootRelativeUrl(baseUrl, mount, accessKey)
+            // Deliberately no prepare() here: that's what opens the actual HTTP connection to the
+            // Icecast mount, which the server counts as a listener immediately — before the user
+            // ever pressed play. Just registering the MediaItem lets the lock screen/Android Auto
+            // show metadata without touching the stream — the play-request listener registered in
+            // onCreate() prepares it for real the moment playback is actually requested.
             player.setMediaItem(MediaItem.Builder().setUri(streamUrl).setMediaMetadata(metadata).build())
-            player.prepare()
             streamUrlSet = true
             // The Live folder's only child is null (unavailable) until this point — a browser
             // that opened that tab before this resolves would otherwise never see it appear.
