@@ -73,35 +73,29 @@ fun TopBar(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Text(text = stationName.uppercase(), style = type.eyebrow, color = colors.ink)
-                Text(text = "⌄", style = type.eyebrow, color = colors.muted)
+                if (showName != null || djName != null) {
+                    Spacer(Modifier.width(1.dp))
+                    showName?.let {
+                        Text(
+                            text = "▸ ${it.uppercase()}",
+                            style = type.monoLabel,
+                            color = colors.muted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                    djName?.let {
+                        Text(
+                            text = "WITH ${it.uppercase()}",
+                            style = type.monoLabel,
+                            color = colors.accent,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
             }
             SettingsButton(hasActiveIndicator = hasActiveIndicator, onClick = onSettingsClick)
-        }
-        if (showName != null || djName != null) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.padding(top = 4.dp),
-            ) {
-                showName?.let {
-                    Text(
-                        text = "▸ ${it.uppercase()}",
-                        style = type.monoLabel,
-                        color = colors.muted,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-                djName?.let {
-                    Text(
-                        text = "WITH ${it.uppercase()}",
-                        style = type.monoLabel,
-                        color = colors.accent,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
         }
         Text(
             text = tagline,
