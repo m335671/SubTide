@@ -121,7 +121,7 @@ private fun DiscMark(isTunedIn: Boolean) {
     )
 
     Canvas(modifier = Modifier.size(22.dp)) {
-        rotate(if (isTunedIn) angle else 0f) {
+        rotate(angle) {
             drawCircle(color = colors.ink, style = Stroke(width = 1.5.dp.toPx()))
             drawLine(
                 color = if (isTunedIn) colors.accent else colors.muted,
