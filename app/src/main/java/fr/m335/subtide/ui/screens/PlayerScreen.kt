@@ -111,6 +111,7 @@ fun PlayerScreen(
         ?.text
     val track = response?.nowPlaying
     val isStreamOnline = response?.streamOnline ?: false
+    val isStandby = state?.streamIdle == true
     val hostLabel = baseUrl.removePrefix("https://").removePrefix("http://")
 
     // The server only recalibrates `track.timestamp` every POLL_INTERVAL_MS via PlayerViewModel's
@@ -146,8 +147,8 @@ fun PlayerScreen(
             stationName = response?.dj?.station ?: "Subwave",
             showName = null,
             djName = response?.dj?.name,
-            tagline = response?.dj?.tagline ?: hostLabel,
-            isTunedIn = isStreamOnline,
+            tagline = if (isStandby) "ON STANDBY — WAITING FOR AUDITORS" else response?.dj?.tagline ?: hostLabel,
+            isTunedIn = isStreamOnline && !isStandby,
             hasActiveIndicator = false,
             onSettingsClick = { showMenu = true },
         )
@@ -192,11 +193,15 @@ fun PlayerScreen(
                     when (val playerState = uiState) {
                         PlayerUiState.Loading -> DjThinkingTicker(text = "tuning in_", onClick = {})
                         is PlayerUiState.Error -> DjThinkingTicker(text = playerState.message, onClick = {}, isError = true)
-                        is PlayerUiState.Ready -> latestDjLine?.let {
-                            DjThinkingTicker(
-                                text = it,
-                                onClick = { scope.launch { pagerState.animateScrollToPage(PAGE_BOOTH) } },
-                            )
+                        is PlayerUiState.Ready -> if (isStandby) {
+                            DjThinkingTicker(text = "The server is in standby mode — no one is listening", onClick = {})
+                        } else {
+                            latestDjLine?.let {
+                                DjThinkingTicker(
+                                    text = it,
+                                    onClick = { scope.launch { pagerState.animateScrollToPage(PAGE_BOOTH) } },
+                                )
+                            }
                         }
                     }
                 }

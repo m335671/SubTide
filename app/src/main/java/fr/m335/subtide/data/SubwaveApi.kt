@@ -98,6 +98,12 @@ data class StateResponse(
     val station: StationInfo? = null,
     /** IANA zone (e.g. `Europe/Paris`) — timestamps display in this zone, not the device's. */
     val timezone: String? = null,
+    /**
+     * True while the server's idle-pause gate has silenced the programme because nobody is
+     * listening (zero listeners for its configured window). The Icecast mounts stay up — a
+     * connected player just hears silence — so this is independent from [NowPlayingResponse.streamOnline].
+     */
+    val streamIdle: Boolean? = null,
 )
 
 /**
