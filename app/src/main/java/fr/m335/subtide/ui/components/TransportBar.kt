@@ -29,9 +29,14 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
@@ -59,8 +64,9 @@ fun TransportBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(Color(0xFF211F1D))
             .border(1.dp, derived.line)
-            .height(96.dp),
+            .height(80.dp),
     ) {
         PowerCell(isOnAir = isOnAir, onClick = onPowerClick, modifier = Modifier.width(72.dp))
         VerticalDivider()
@@ -101,16 +107,22 @@ private fun PowerCell(isOnAir: Boolean, onClick: () -> Unit, modifier: Modifier 
             .clickableNoRipple(onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(modifier = Modifier.size(36.dp)) {
-            val ringColor = if (isOnAir) colors.accent else colors.muted
-            if (isOnAir) {
-                drawCircle(color = colors.accent.copy(alpha = 0.18f), radius = size.minDimension / 2f)
+        val icon = painterResource(id = android.R.drawable.ic_lock_power_off)
+        val ringColor = if (isOnAir) colors.accent else colors.muted
+
+        Canvas(modifier = Modifier.size(42.dp)) { // adapte à ta taille existante
+            val iconSize = size.minDimension  // équivalent de ton rayon réduit
+            with(icon) {
+                translate(
+                    left = (size.width - iconSize) / 2f,
+                    top = (size.height - iconSize) / 2f
+                ) {
+                    draw(
+                        size = Size(iconSize, iconSize),
+                        colorFilter = ColorFilter.tint(ringColor)
+                    )
+                }
             }
-            drawCircle(
-                color = ringColor,
-                radius = size.minDimension / 2f - 3.dp.toPx(),
-                style = Stroke(width = 2.dp.toPx()),
-            )
         }
     }
 }
