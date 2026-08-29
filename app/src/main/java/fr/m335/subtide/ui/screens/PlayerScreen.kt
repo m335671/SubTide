@@ -98,7 +98,6 @@ fun PlayerScreen(
     val pageLabels = if (isAdminAuthed) PAGE_LABELS_BASE + "SKIP" else PAGE_LABELS_BASE
     val pagerState = rememberPagerState(initialPage = PAGE_LIVE) { pageLabels.size }
 
-    var isLiked by remember { mutableStateOf(false) }
     var lastVolumeBeforeMute by remember { mutableFloatStateOf(1f) }
     var showThemes by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
@@ -108,6 +107,9 @@ fun PlayerScreen(
     val response: NowPlayingResponse? = (uiState as? PlayerUiState.Ready)?.nowPlaying
     val state: StateResponse? = (uiState as? PlayerUiState.Ready)?.state
     val session: SessionResponse? = (uiState as? PlayerUiState.Ready)?.session
+    val likeStatus = (uiState as? PlayerUiState.Ready)?.likeStatus
+    val isLiked = likeStatus?.liked == true
+    val likeCount = likeStatus?.count ?: 0
     val boothMessages = session?.messages ?: emptyList()
     val latestDjLine = boothMessages
         .asReversed()
@@ -191,7 +193,8 @@ fun PlayerScreen(
                         elapsedSec = elapsedSec,
                         durationSec = track?.duration,
                         isLiked = isLiked,
-                        onLikeClick = { isLiked = !isLiked },
+                        likeCount = likeCount,
+                        onLikeClick = viewModel::submitLike,
                         onCoverClick = { scope.launch { pagerState.animateScrollToPage(PAGE_TIMELINE) } },
                     )
                     when (val playerState = uiState) {

@@ -45,6 +45,7 @@ fun CenterStage(
     elapsedSec: Int?,
     durationSec: Int?,
     isLiked: Boolean,
+    likeCount: Int,
     onLikeClick: () -> Unit,
     onCoverClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -93,6 +94,14 @@ fun CenterStage(
                     .size(18.dp)
                     .clickable(onClick = onLikeClick),
             )
+            if (likeCount > 0) {
+                Spacer(Modifier.width(3.dp))
+                Text(
+                    text = "$likeCount",
+                    style = type.monoLabel.copy(fontSize = 10.sp),
+                    color = derived.destructive,
+                )
+            }
         }
         Spacer(Modifier.height(10.dp))
         Text(
