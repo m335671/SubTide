@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import fr.m335.subtide.ui.theme.SubTideTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun CenterStage(
@@ -36,7 +37,7 @@ fun CenterStage(
     artist: String?,
     album: String?,
     genre: String?,
-    bpm: Int?,
+    bpm: Double?,
     key: String?,
     moodLine: String?,
     llmTokens: Int?,
@@ -53,7 +54,7 @@ fun CenterStage(
     val type = SubTideTheme.typography
 
     val artistAlbumLine = listOfNotNull(artist, album).takeIf { it.isNotEmpty() }?.joinToString(" · ")
-    val metadataLine = listOfNotNull(genre?.uppercase(), bpm?.let { "$it BPM" }, key?.uppercase())
+    val metadataLine = listOfNotNull(genre?.uppercase(), bpm?.let { "${it.roundToInt()} BPM" }, key?.uppercase())
         .takeIf { it.isNotEmpty() }
         ?.joinToString(" · ")
     val nowPlayingLabel = if (elapsedSec != null && durationSec != null) {
