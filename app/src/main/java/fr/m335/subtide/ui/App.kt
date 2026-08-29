@@ -1,6 +1,9 @@
 package fr.m335.subtide.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -8,6 +11,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.m335.subtide.data.AdminCredentials
@@ -20,6 +24,16 @@ import fr.m335.subtide.ui.onboarding.OnboardingScreen
 import fr.m335.subtide.ui.screens.PlayerScreen
 import fr.m335.subtide.ui.theme.SubTideTheme
 import fr.m335.subtide.ui.theme.SubwaveThemeDefaults
+import kotlinx.coroutines.flow.map
+
+/** Distinguishes "the persisted base URL hasn't loaded yet" from "loaded, and there isn't one" —
+ * collapsing both into a plain nullable `String?` made [SubTideApp] flash [OnboardingScreen] for a
+ * moment on every launch, even when a server was already configured, while DataStore delivered its
+ * first real value. */
+private sealed interface BaseUrlState {
+    data object Loading : BaseUrlState
+    data class Resolved(val url: String?) : BaseUrlState
+}
 
 /**
  * Root of the app — resolves the active [fr.m335.subtide.ui.theme.SubwaveThemeOption] (server
@@ -36,13 +50,19 @@ fun SubTideApp() {
     val listenerAccess = remember { ListenerAccess(context) }
     val themePreferences = remember { ThemePreferences(context) }
     val adminCredentials = remember { AdminCredentials(context) }
-    val baseUrl by serverPreferences.baseUrl.collectAsStateWithLifecycle(initialValue = null)
+    val baseUrlFlow = remember(serverPreferences) { serverPreferences.baseUrl.map { BaseUrlState.Resolved(it) as BaseUrlState } }
+    val baseUrlState by baseUrlFlow.collectAsStateWithLifecycle(initialValue = BaseUrlState.Loading)
     val selectedThemeId by themePreferences.selectedThemeId.collectAsStateWithLifecycle(initialValue = null)
     val systemDark = isSystemInDarkTheme()
     val fallbackTheme = if (systemDark) SubwaveThemeDefaults.midnight else SubwaveThemeDefaults.classicLight
 
-    val currentBaseUrl = baseUrl
-    if (currentBaseUrl == null) {
+    val resolvedBaseUrl = baseUrlState as? BaseUrlState.Resolved
+    val currentBaseUrl = resolvedBaseUrl?.url
+    if (resolvedBaseUrl == null) {
+        SubTideTheme(themeOption = fallbackTheme) {
+            Box(modifier = Modifier.fillMaxSize().background(SubTideTheme.colors.bg))
+        }
+    } else if (currentBaseUrl == null) {
         SubTideTheme(themeOption = fallbackTheme) {
             OnboardingScreen(serverPreferences = serverPreferences, listenerAccess = listenerAccess)
         }
