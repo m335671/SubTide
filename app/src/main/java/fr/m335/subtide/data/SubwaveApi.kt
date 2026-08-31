@@ -22,7 +22,7 @@ data class NowPlayingTrack(
     val album: String? = null,
     @SerialName("subsonic_id") val subsonicId: String? = null,
     val genre: String? = null,
-    val bpm: Int? = null,
+    val bpm: Double? = null,
     val musicalKey: String? = null,
     val moods: List<String>? = null,
     val year: Int? = null,
