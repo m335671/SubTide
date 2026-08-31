@@ -2,6 +2,7 @@ package fr.m335.subtide.ui.player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.m335.subtide.data.LikeStatusResponse
 import fr.m335.subtide.data.NowPlayingCache
 import fr.m335.subtide.data.NowPlayingResponse
 import fr.m335.subtide.data.SessionResponse
@@ -26,6 +27,8 @@ sealed interface PlayerUiState {
         val latencyMs: Int?,
         /** True while these values are the last snapshot persisted by [NowPlayingCache], shown while the app re-establishes its own connection rather than fetched from a poll of this session. */
         val isFromCache: Boolean = false,
+        /** Null if the station has likes disabled, or the `/like` call hasn't succeeded yet — not cached across launches, unlike the rest of [Ready]. */
+        val likeStatus: LikeStatusResponse? = null,
     ) : PlayerUiState
     data class Error(val message: String) : PlayerUiState
 }
@@ -64,8 +67,11 @@ class PlayerViewModel(private val api: SubwaveApi, private val cache: NowPlaying
             val latencyMs = (System.currentTimeMillis() - start).toInt()
             val state = api.state()
             val session = api.session()
+            // Best-effort: an older/likes-disabled server 404s or errors here without failing the
+            // whole poll, since every other field on this screen still has something to show.
+            val likeStatus = runCatching { api.likeStatus() }.getOrNull()
             cache.save(nowPlaying, state, session)
-            _uiState.value = PlayerUiState.Ready(nowPlaying, state, session, latencyMs)
+            _uiState.value = PlayerUiState.Ready(nowPlaying, state, session, latencyMs, likeStatus = likeStatus)
         } catch (e: IOException) {
             onPollFailed("Impossible de contacter le serveur")
         } catch (e: HttpException) {
@@ -78,6 +84,25 @@ class PlayerViewModel(private val api: SubwaveApi, private val cache: NowPlaying
     private fun onPollFailed(message: String) {
         if (_uiState.value !is PlayerUiState.Ready) {
             _uiState.value = PlayerUiState.Error(message)
+        }
+    }
+
+    /** Likes the currently airing track and applies the server's authoritative liked/count back onto
+     * [uiState] immediately, rather than waiting for the next poll. */
+    fun submitLike() {
+        val ready = _uiState.value as? PlayerUiState.Ready ?: return
+        if (ready.likeStatus?.liked == true) return
+        viewModelScope.launch {
+            val result = runCatching { api.submitLike() }.getOrNull() ?: return@launch
+            val current = _uiState.value as? PlayerUiState.Ready ?: return@launch
+            _uiState.value = current.copy(
+                likeStatus = LikeStatusResponse(
+                    enabled = true,
+                    songId = result.songId,
+                    liked = result.liked,
+                    count = result.count,
+                ),
+            )
         }
     }
 }

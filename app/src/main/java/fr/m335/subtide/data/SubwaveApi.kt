@@ -178,6 +178,27 @@ data class RequestStatusResponse(
     val queuePosition: Int? = null,
 )
 
+/** `GET /like` — liked-state and total like count for whichever track is currently airing; no id
+ * needed, the server resolves it from its own on-air state. `enabled` is false if the station has
+ * likes turned off. */
+@Serializable
+data class LikeStatusResponse(
+    val enabled: Boolean? = null,
+    val songId: String? = null,
+    val liked: Boolean? = null,
+    val count: Int? = null,
+)
+
+/** `POST /like` — likes the currently airing track (no body needed for that case). */
+@Serializable
+data class LikeSubmitResponse(
+    val ok: Boolean? = null,
+    val songId: String? = null,
+    val liked: Boolean? = null,
+    val alreadyLiked: Boolean? = null,
+    val count: Int? = null,
+)
+
 interface SubwaveApi {
     @GET("health")
     suspend fun health(): Response<Unit>
@@ -199,6 +220,12 @@ interface SubwaveApi {
 
     @GET("request/{id}")
     suspend fun requestStatus(@Path("id") id: String): RequestStatusResponse
+
+    @GET("like")
+    suspend fun likeStatus(): LikeStatusResponse
+
+    @POST("like")
+    suspend fun submitLike(): LikeSubmitResponse
 
     /** Admin-only — requires [AdminAuthProvider], see [ApiClient.createAdmin]. */
     @POST("dj/skip")
