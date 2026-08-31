@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import fr.m335.subtide.data.AdminCredentials
 import fr.m335.subtide.data.ApiClient
+import fr.m335.subtide.data.NowPlayingCache
 import fr.m335.subtide.data.NowPlayingResponse
 import fr.m335.subtide.data.ServerPreferences
 import fr.m335.subtide.data.SessionResponse
@@ -81,10 +83,12 @@ fun PlayerScreen(
     modifier: Modifier = Modifier,
 ) {
     val colors = SubTideTheme.colors
+    val context = LocalContext.current.applicationContext
     val api = remember(baseUrl) { ApiClient.create(baseUrl) }
+    val nowPlayingCache = remember { NowPlayingCache(context) }
     val viewModel: PlayerViewModel = viewModel(
         key = baseUrl,
-        factory = viewModelFactory { initializer { PlayerViewModel(api) } },
+        factory = viewModelFactory { initializer { PlayerViewModel(api, nowPlayingCache) } },
     )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playbackViewModel: PlaybackViewModel = viewModel()
@@ -195,6 +199,8 @@ fun PlayerScreen(
                         is PlayerUiState.Error -> DjThinkingTicker(text = playerState.message, onClick = {}, isError = true)
                         is PlayerUiState.Ready -> if (isStandby) {
                             DjThinkingTicker(text = "The server is in standby mode — no one is listening", onClick = {})
+                        } else if (playerState.isFromCache) {
+                            DjThinkingTicker(text = "reconnecting to the server_", onClick = {})
                         } else {
                             latestDjLine?.let {
                                 DjThinkingTicker(
